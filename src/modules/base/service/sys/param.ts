@@ -1,4 +1,4 @@
-import { Inject, InjectClient, Provide } from '@midwayjs/core';
+import { InjectClient, Provide } from '@midwayjs/core';
 import { BaseService, CoolCommException } from '@cool-midway/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { Not, Repository } from 'typeorm';
@@ -45,6 +45,22 @@ export class BaseSysParamService extends BaseService {
   }
 
   /**
+   * 信息
+   * @param id
+   * @param infoIgnoreProperty
+   * @returns
+   */
+  async info(id: any, infoIgnoreProperty?: string[]): Promise<any> {
+    const info = await super.info(id, infoIgnoreProperty);
+    try {
+      info.data = JSON.parse(info.data.replace(/{/g, '[').replace(/}/g, ']'));
+    } catch (error) {
+      info.data = info.data;
+    }
+    return info;
+  }
+
+  /**
    * 根据key获得对应的网页数据
    * @param key
    */
@@ -66,6 +82,9 @@ export class BaseSysParamService extends BaseService {
    * @param param
    */
   async addOrUpdate(param: any, type): Promise<void> {
+    if (type == 2) {
+      param.data = JSON.stringify(param.data.replace());
+    }
     const find = {
       keyName: param.keyName,
     };
