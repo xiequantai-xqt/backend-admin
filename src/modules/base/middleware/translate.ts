@@ -51,10 +51,10 @@ export class BaseTranslateMiddleware
             return;
           }
         }
-        ctx.status = 500;
+        ctx.status = 200;
         ctx.body = {
           code: RESCODE.COMMFAIL,
-          message: 'Service Error',
+          message: error.message,
         };
         return;
       }
