@@ -15,7 +15,7 @@ export class TaskCommEvent {
   taskLocalService: TaskLocalService;
 
   @Event('onServerReadyOnce')
-  async onServerReadyOnce() {
+  async onServerReady() {
     this.taskInfoService.initTask();
   }
 

@@ -4,9 +4,9 @@
   "description": "一个很酷的Ai快速开发框架",
   "private": true,
   "dependencies": {
-    "@cool-midway/core": "8.0.6",
-    "@cool-midway/rpc": "8.0.1",
-    "@cool-midway/task": "8.0.2",
+    "@cool-midway/core": "^8.0.7",
+    "@cool-midway/rpc": "^8.0.1",
+    "@cool-midway/task": "^8.0.2",
     "@midwayjs/bootstrap": "^3.20.3",
     "@midwayjs/cache-manager": "^3.20.3",
     "@midwayjs/core": "^3.20.3",
