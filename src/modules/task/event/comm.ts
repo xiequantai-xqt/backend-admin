@@ -16,7 +16,6 @@ export class TaskCommEvent {
 
   @Event('onServerReadyOnce')
   async onServerReadyOnce() {
-    console.log('onServerReadyOnce', 'initTask');
     this.taskInfoService.initTask();
   }
 
