@@ -1,0 +1,13 @@
+{
+  "name": "admin-system",
+  "version": "1.0.0",
+  "description": "万象台・一体中枢 - 后台管理系统（后端）",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": ["express", "admin", "backend"],
+  "author": "",
+  "license": "MIT"
+}
