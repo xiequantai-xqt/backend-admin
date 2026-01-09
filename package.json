@@ -1,5 +1,5 @@
 {
-  "name": "admin-system",
+  "name": "backend-admin",
   "version": "1.0.0",
   "description": "万象台・一体中枢 - 后台管理系统（后端）",
   "main": "src/server.js",
@@ -7,7 +7,21 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js"
   },
-  "keywords": ["express", "admin", "backend"],
+  "keywords": [
+    "express",
+    "admin",
+    "backend"
+  ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.2",
+    "morgan": "^1.10.1"
+  }
 }
