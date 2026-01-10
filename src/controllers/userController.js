@@ -1,35 +1,58 @@
 const User = require('../models/User');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
+exports.register = async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    // 检查用户名是否已存在
+    let user = await User.findOne({ username });
+    if (user) {
+      return res.status(400).json({ message: '用户名已存在' });
+    }
+    // 密码加密
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    // 创建新用户
+    user = new User({
+      username,
+      password: hashedPassword,
+    });
+    await user.save();
+    res.status(201).json({ message: '注册成功' });
+  } catch (error) {
+    res.status(500).json({ message: '注册失败', error: error.message });
+  }
+};
+
+exports.login = async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    // 查找用户
+    let user = await User.findOne({ username });
+    if (!user) {
+      return res.status(400).json({ message: '用户名或密码错误' });
+    }
+    // 验证密码
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: '用户名或密码错误' });
+    }
+    // 生成 JWT Token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+    res.json({ token, user: { username: user.username } });
+  } catch (error) {
+    res.status(500).json({ message: '登录失败', error: error.message });
+  }
+};
+
+// 新增的用户管理函数
 exports.getAllUsers = async (req, res) => {
   try {
-    const { page = 1, limit = 10, search = '' } = req.query;
-    
-    const query = search
-      ? {
-          $or: [
-            { username: { $regex: search, $options: 'i' } },
-            { email: { $regex: search, $options: 'i' } },
-          ],
-        }
-      : {};
-    
-    const users = await User.find(query)
-      .select('-password')
-      .skip((page - 1) * limit)
-      .limit(parseInt(limit))
-      .sort({ createdAt: -1 });
-    
-    const total = await User.countDocuments(query);
-    
-    res.json({
-      users,
-      pagination: {
-        page: parseInt(page),
-        limit: parseInt(limit),
-        total,
-        pages: Math.ceil(total / limit),
-      },
-    });
+    const users = await User.find();
+    res.json(users);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -37,13 +60,11 @@ exports.getAllUsers = async (req, res) => {
 
 exports.getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).select('-password');
-    
+    const user = await User.findById(req.params.id);
     if (!user) {
-      return res.status(404).json({ error: '用户不存在' });
+      return res.status(404).json({ message: '用户未找到' });
     }
-    
-    res.json({ user });
+    res.json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -51,23 +72,11 @@ exports.getUserById = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
-    const { role, isActive } = req.body;
-    const updates = {};
-    
-    if (role) updates.role = role;
-    if (typeof isActive === 'boolean') updates.isActive = isActive;
-    
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
-      updates,
-      { new: true, runValidators: true }
-    ).select('-password');
-    
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!user) {
-      return res.status(404).json({ error: '用户不存在' });
+      return res.status(404).json({ message: '用户未找到' });
     }
-    
-    res.json({ message: '用户更新成功', user });
+    res.json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -76,12 +85,10 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
-    
     if (!user) {
-      return res.status(404).json({ error: '用户不存在' });
+      return res.status(404).json({ message: '用户未找到' });
     }
-    
-    res.json({ message: '用户删除成功' });
+    res.json({ message: '用户已删除' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

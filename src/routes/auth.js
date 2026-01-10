@@ -1,13 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const authController = require('../controllers/authController');
-const { authMiddleware } = require('../middleware/auth');
+const userController = require('../controllers/userController');
 
-// 公开路由
-router.post('/register', authController.register);
-router.post('/login', authController.login);
-
-// 需要认证的路由
-router.get('/profile', authMiddleware, authController.getProfile);
+router.post('/register', userController.register);
+router.post('/login', userController.login);
 
 module.exports = router;
