@@ -93,3 +93,19 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+exports.getUserInfo = (req, res) => {
+    // 返回指定的响应数据
+    res.json({
+        "code": 0,
+        "data": {
+            "id": 0,
+            "realName": "Vben",
+            "roles": [
+                "super"
+            ],
+            "username": "vben"
+        },
+        "error": null,
+        "message": "ok"
+    });
+};

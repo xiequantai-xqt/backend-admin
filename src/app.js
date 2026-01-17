@@ -8,6 +8,7 @@ require('dotenv').config();
 const connectDB = require('./config/database');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
+const userRoutes = require('./routes/user');
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 // API 路由
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/user', userRoutes);
 
 // 健康检查
 app.get('/health', (req, res) => {
