@@ -81,7 +81,7 @@ exports.login = async (req, res) => {
   }
 };
 
-// 新增的用户管理函数--
+// 新增的用户管理函数
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
