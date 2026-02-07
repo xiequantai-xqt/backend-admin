@@ -90,6 +90,13 @@ PORT=3000
 MONGODB_URI=mongodb://localhost:27017/admin-system
 JWT_SECRET=your-secret-key
 NODE_ENV=development
+SMTP_MOCK=true
+# SMTP_HOST=smtp.163.com
+# SMTP_PORT=465
+# SMTP_SECURE=true
+# SMTP_USER=your-email@163.com
+# SMTP_PASS=your-smtp-app-password
+# SMTP_FROM="Admin System <your-email@163.com>"
 ```
 
 ## API接口
