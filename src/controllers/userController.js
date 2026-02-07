@@ -91,64 +91,6 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = async (req, res) => {
-  const { username, password } = req.body;
-  try {
-    if (!username || !password) {
-      return res.status(400).json({
-        code: 400,
-        message: 'Username and password are required',
-        error: 'Missing credentials',
-        data: null,
-      });
-    }
-
-    const user = await User.findOne({ username });
-    if (!user) {
-      return res.status(400).json({
-        code: 400,
-        message: 'Invalid username or password',
-        error: 'User not found',
-        data: null,
-      });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({
-        code: 400,
-        message: 'Invalid username or password',
-        error: 'Password mismatch',
-        data: null,
-      });
-    }
-
-    if (!process.env.JWT_SECRET) {
-      return res.status(500).json({
-        code: 500,
-        message: 'Server misconfiguration',
-        error: 'JWT_SECRET is not set',
-        data: null,
-      });
-    }
-
-    const accessToken = jwt.sign(
-      { id: user._id, username: user.username },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
-    res.json(buildLoginResponse(user, accessToken));
-  } catch (error) {
-    res.status(500).json({
-      code: 500,
-      message: 'Login failed',
-      error: error.message,
-      data: null,
-    });
-  }
-};
-
 exports.sendEmailCode = async (req, res) => {
   const { email, purpose = 'login' } = req.body;
   try {
